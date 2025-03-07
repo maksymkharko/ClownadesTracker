@@ -3,28 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Счётчик времени</title>
+    <title>Time Tracker</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Счётчик времени</h1>
-        <div class="input-group">
-            <label for="dateInput">Выберите дату:</label>
-            <input type="datetime-local" id="dateInput">
+        <h1>Time Tracker</h1>
+        <div class="tabs">
+            <button id="tabElapsed" class="active">Прошедшее время</button>
+            <button id="tabCountdown">Обратный отсчёт</button>
         </div>
-        <div class="buttons">
-            <button id="startTimer">Старт</button>
-            <button id="resetTimer">Сброс</button>
+        <div id="elapsedTimeSection" class="section active">
+            <input type="text" id="eventNameElapsed" placeholder="Например, бросил курить">
+            <input type="datetime-local" id="startDateElapsed">
+            <button id="startElapsed">Старт</button>
+            <div class="timer-display">
+                <span id="elapsedDays">0 дней</span>
+                <span id="elapsedHours">0 часов</span>
+                <span id="elapsedMinutes">0 минут</span>
+                <span id="elapsedSeconds">0 секунд</span>
+            </div>
         </div>
-        <div id="timerDisplay" class="timer-display">
-            <span id="days">0 дней</span>
-            <span id="hours">0 часов</span>
-            <span id="minutes">0 минут</span>
-            <span id="seconds">0 секунд</span>
+        <div id="countdownSection" class="section">
+            <input type="text" id="eventNameCountdown" placeholder="Например, Новый год">
+            <input type="datetime-local" id="targetDateCountdown">
+            <button id="startCountdown">Старт</button>
+            <div class="timer-display">
+                <span id="countdownDays">0 дней</span>
+                <span id="countdownHours">0 часов</span>
+                <span id="countdownMinutes">0 минут</span>
+                <span id="countdownSeconds">0 секунд</span>
+            </div>
         </div>
-        <div class="progress-bar">
-            <div id="progress"></div>
+        <div class="progress-container">
+            <div id="progressBar" class="progress-bar"></div>
         </div>
     </div>
     <script src="script.js"></script>
