@@ -1,83 +1,120 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #1e1e1e;
-    color: #ffffff;
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #121212;
+    color: #ffffff;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    padding: 20px;
 }
 
 .container {
+    background-color: #1e1e1e;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 500px;
     text-align: center;
-    background-color: #2e2e2e;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 h1 {
     color: #bb86fc;
     margin-bottom: 20px;
+    font-size: 2rem;
 }
 
-.input-group {
+.tabs {
+    display: flex;
+    justify-content: center;
     margin-bottom: 20px;
 }
 
-label {
-    display: block;
-    margin-bottom: 5px;
-    color: #bb86fc;
+.tabs button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #333;
+    color: #ffffff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
 }
 
-input[type="datetime-local"] {
+.tabs button.active {
+    background-color: #bb86fc;
+    color: #121212;
+}
+
+.tabs button:hover {
+    transform: scale(1.05);
+}
+
+.section {
+    display: none;
+}
+
+.section.active {
+    display: block;
+}
+
+input[type="text"], input[type="datetime-local"] {
+    width: 100%;
     padding: 10px;
+    margin: 10px 0;
     border: 1px solid #bb86fc;
     border-radius: 5px;
-    background-color: #1e1e1e;
+    background-color: #333;
     color: #ffffff;
-    font-size: 16px;
-}
-
-.buttons {
-    margin-bottom: 20px;
+    font-size: 1rem;
 }
 
 button {
-    padding: 10px 20px;
-    margin: 5px;
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
     border: none;
     border-radius: 5px;
     background-color: #bb86fc;
-    color: #1e1e1e;
-    font-size: 16px;
+    color: #121212;
+    font-size: 1rem;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.3s;
 }
 
 button:hover {
     background-color: #9a67ea;
+    transform: scale(1.05);
 }
 
 .timer-display {
-    font-size: 24px;
-    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+    font-size: 1.2rem;
+    color: #bb86fc;
+}
+
+.progress-container {
+    width: 100%;
+    height: 10px;
+    background-color: #333;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 20px;
 }
 
 .progress-bar {
-    width: 100%;
-    height: 10px;
-    background-color: #1e1e1e;
-    border-radius: 5px;
-    overflow: hidden;
-}
-
-#progress {
     height: 100%;
     width: 0%;
     background-color: #bb86fc;
-    transition: width 0.5s;
+    transition: width 0.5s ease-in-out;
 }
