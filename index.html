@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Счётчик времени</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Счётчик времени</h1>
+        <div class="input-group">
+            <label for="dateInput">Выберите дату:</label>
+            <input type="datetime-local" id="dateInput">
+        </div>
+        <div class="buttons">
+            <button id="startTimer">Старт</button>
+            <button id="resetTimer">Сброс</button>
+        </div>
+        <div id="timerDisplay" class="timer-display">
+            <span id="days">0 дней</span>
+            <span id="hours">0 часов</span>
+            <span id="minutes">0 минут</span>
+            <span id="seconds">0 секунд</span>
+        </div>
+        <div class="progress-bar">
+            <div id="progress"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
