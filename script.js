@@ -1,62 +1,96 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const dateInput = document.getElementById("dateInput");
-    const startTimerButton = document.getElementById("startTimer");
-    const resetTimerButton = document.getElementById("resetTimer");
-    const timerDisplay = document.getElementById("timerDisplay");
-    const progressBar = document.getElementById("progress");
-    const daysDisplay = document.getElementById("days");
-    const hoursDisplay = document.getElementById("hours");
-    const minutesDisplay = document.getElementById("minutes");
-    const secondsDisplay = document.getElementById("seconds");
+    const tabElapsed = document.getElementById("tabElapsed");
+    const tabCountdown = document.getElementById("tabCountdown");
+    const elapsedTimeSection = document.getElementById("elapsedTimeSection");
+    const countdownSection = document.getElementById("countdownSection");
+    const progressBar = document.getElementById("progressBar");
 
-    let targetDate = null;
-    let interval = null;
+    const eventNameElapsed = document.getElementById("eventNameElapsed");
+    const startDateElapsed = document.getElementById("startDateElapsed");
+    const startElapsedButton = document.getElementById("startElapsed");
+    const elapsedDays = document.getElementById("elapsedDays");
+    const elapsedHours = document.getElementById("elapsedHours");
+    const elapsedMinutes = document.getElementById("elapsedMinutes");
+    const elapsedSeconds = document.getElementById("elapsedSeconds");
 
-    // Считываем ID пользователя Telegram
-    const userId = Telegram.WebApp.initDataUnsafe.user?.id || "guest";
+    const eventNameCountdown = document.getElementById("eventNameCountdown");
+    const targetDateCountdown = document.getElementById("targetDateCountdown");
+    const startCountdownButton = document.getElementById("startCountdown");
+    const countdownDays = document.getElementById("countdownDays");
+    const countdownHours = document.getElementById("countdownHours");
+    const countdownMinutes = document.getElementById("countdownMinutes");
+    const countdownSeconds = document.getElementById("countdownSeconds");
 
-    // Загрузка сохранённой даты из LocalStorage
-    const savedDate = localStorage.getItem(`targetDate_${userId}`);
-    if (savedDate) {
-        dateInput.value = savedDate;
-        targetDate = new Date(savedDate).getTime();
-        startTimer();
-    }
+    let elapsedInterval = null;
+    let countdownInterval = null;
 
-    // Запуск таймера
-    startTimerButton.addEventListener("click", () => {
-        if (!dateInput.value) {
-            alert("Пожалуйста, выберите дату.");
+    // Переключение между вкладками
+    tabElapsed.addEventListener("click", () => {
+        tabElapsed.classList.add("active");
+        tabCountdown.classList.remove("active");
+        elapsedTimeSection.classList.add("active");
+        countdownSection.classList.remove("active");
+    });
+
+    tabCountdown.addEventListener("click", () => {
+        tabCountdown.classList.add("active");
+        tabElapsed.classList.remove("active");
+        elapsedTimeSection.classList.remove("active");
+        countdownSection.classList.add("active");
+    });
+
+    // Функционал прошедшего времени
+    startElapsedButton.addEventListener("click", () => {
+        const startDate = new Date(startDateElapsed.value).getTime();
+        if (!startDate) {
+            alert("Выберите дату начала!");
             return;
         }
-        targetDate = new Date(dateInput.value).getTime();
-        localStorage.setItem(`targetDate_${userId}`, dateInput.value);
-        startTimer();
+        clearInterval(elapsedInterval);
+        elapsedInterval = setInterval(() => updateElapsedTime(startDate), 1000);
     });
 
-    // Сброс таймера
-    resetTimerButton.addEventListener("click", () => {
-        clearInterval(interval);
-        timerDisplay.textContent = "0 дней 0 часов 0 минут 0 секунд";
-        progressBar.style.width = "0%";
-        localStorage.removeItem(`targetDate_${userId}`);
-        dateInput.value = "";
-        targetDate = null;
-    });
+    function updateElapsedTime(startDate) {
+        const now = new Date().getTime();
+        const distance = now - startDate;
 
-    // Обновление таймера
-    function startTimer() {
-        clearInterval(interval);
-        interval = setInterval(updateTimer, 1000);
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        elapsedDays.textContent = `${days} дней`;
+        elapsedHours.textContent = `${hours} часов`;
+        elapsedMinutes.textContent = `${minutes} минут`;
+        elapsedSeconds.textContent = `${seconds} секунд`;
+
+        // Обновление прогресс-бара (пример для 30 дней)
+        const maxDays = 30;
+        const progress = (days / maxDays) * 100;
+        progressBar.style.width = `${Math.min(progress, 100)}%`;
     }
 
-    function updateTimer() {
+    // Функционал обратного отсчёта
+    startCountdownButton.addEventListener("click", () => {
+        const targetDate = new Date(targetDateCountdown.value).getTime();
+        if (!targetDate) {
+            alert("Выберите целевую дату!");
+            return;
+        }
+        clearInterval(countdownInterval);
+        countdownInterval = setInterval(() => updateCountdown(targetDate), 1000);
+    });
+
+    function updateCountdown(targetDate) {
         const now = new Date().getTime();
         const distance = targetDate - now;
 
         if (distance <= 0) {
-            clearInterval(interval);
-            timerDisplay.textContent = "Время истекло!";
+            clearInterval(countdownInterval);
+            countdownDays.textContent = "0 дней";
+            countdownHours.textContent = "0 часов";
+            countdownMinutes.textContent = "0 минут";
+            countdownSeconds.textContent = "0 секунд";
             progressBar.style.width = "100%";
             return;
         }
@@ -66,15 +100,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        daysDisplay.textContent = `${days} дней`;
-        hoursDisplay.textContent = `${hours} часов`;
-        minutesDisplay.textContent = `${minutes} минут`;
-        secondsDisplay.textContent = `${seconds} секунд`;
+        countdownDays.textContent = `${days} дней`;
+        countdownHours.textContent = `${hours} часов`;
+        countdownMinutes.textContent = `${minutes} минут`;
+        countdownSeconds.textContent = `${seconds} секунд`;
 
         // Обновление прогресс-бара
-        const totalTime = targetDate - new Date(dateInput.value).getTime();
-        const elapsedTime = now - new Date(dateInput.value).getTime();
-        const progressPercentage = (elapsedTime / totalTime) * 100;
-        progressBar.style.width = `${progressPercentage}%`;
+        const totalTime = targetDate - new Date(targetDateCountdown.value).getTime();
+        const elapsedTime = now - new Date(targetDateCountdown.value).getTime();
+        const progress = (elapsedTime / totalTime) * 100;
+        progressBar.style.width = `${Math.min(progress, 100)}%`;
     }
 });
