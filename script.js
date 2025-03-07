@@ -1,4 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const Telegram = window.Telegram.WebApp;
+
+    // Инициализация Telegram WebApp
+    Telegram.ready();
+    const userId = Telegram.initDataUnsafe.user?.id || "guest";
+
+    // Элементы интерфейса
     const tabElapsed = document.getElementById("tabElapsed");
     const tabCountdown = document.getElementById("tabCountdown");
     const elapsedTimeSection = document.getElementById("elapsedTimeSection");
@@ -24,12 +31,53 @@ document.addEventListener("DOMContentLoaded", () => {
     let elapsedInterval = null;
     let countdownInterval = null;
 
+    // Загрузка сохранённых данных
+    function loadData() {
+        const savedData = localStorage.getItem(`timeTrackerData_${userId}`);
+        if (savedData) {
+            const data = JSON.parse(savedData);
+            if (data.elapsed) {
+                eventNameElapsed.value = data.elapsed.eventName;
+                startDateElapsed.value = data.elapsed.startDate;
+                startElapsedButton.click();
+            }
+            if (data.countdown) {
+                eventNameCountdown.value = data.countdown.eventName;
+                targetDateCountdown.value = data.countdown.targetDate;
+                startCountdownButton.click();
+            }
+        }
+    }
+
+    // Сохранение данных
+    function saveData() {
+        const data = {
+            elapsed: {
+                eventName: eventNameElapsed.value,
+                startDate: startDateElapsed.value,
+            },
+            countdown: {
+                eventName: eventNameCountdown.value,
+                targetDate: targetDateCountdown.value,
+            },
+        };
+        localStorage.setItem(`timeTrackerData_${userId}`, JSON.stringify(data));
+    }
+
+    // Тактильная отдача (вибрация)
+    function vibrate() {
+        if (Telegram.isVersionAtLeast("6.1")) {
+            Telegram.HapticFeedback.impactOccurred("light");
+        }
+    }
+
     // Переключение между вкладками
     tabElapsed.addEventListener("click", () => {
         tabElapsed.classList.add("active");
         tabCountdown.classList.remove("active");
         elapsedTimeSection.classList.add("active");
         countdownSection.classList.remove("active");
+        vibrate();
     });
 
     tabCountdown.addEventListener("click", () => {
@@ -37,6 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
         tabElapsed.classList.remove("active");
         elapsedTimeSection.classList.remove("active");
         countdownSection.classList.add("active");
+        vibrate();
     });
 
     // Функционал прошедшего времени
@@ -48,6 +97,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         clearInterval(elapsedInterval);
         elapsedInterval = setInterval(() => updateElapsedTime(startDate), 1000);
+        saveData();
+        vibrate();
     });
 
     function updateElapsedTime(startDate) {
@@ -79,6 +130,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         clearInterval(countdownInterval);
         countdownInterval = setInterval(() => updateCountdown(targetDate), 1000);
+        saveData();
+        vibrate();
     });
 
     function updateCountdown(targetDate) {
@@ -111,4 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const progress = (elapsedTime / totalTime) * 100;
         progressBar.style.width = `${Math.min(progress, 100)}%`;
     }
+
+    // Загрузка данных при старте
+    loadData();
 });
